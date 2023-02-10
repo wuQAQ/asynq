@@ -25,13 +25,13 @@ import (
 // Version of asynq library and CLI.
 const Version = "0.24.0"
 
-// DefaultQueueName is the queue name used if none are specified by user.
+// DefaultQueueName 默认队列的名称
 const DefaultQueueName = "default"
 
-// DefaultQueue is the redis key for the default queue.
+// DefaultQueue redis中默认队列的键值
 var DefaultQueue = PendingKey(DefaultQueueName)
 
-// Global Redis keys.
+// 全局redis键值
 const (
 	AllServers    = "asynq:servers"    // ZSET
 	AllWorkers    = "asynq:workers"    // ZSET
@@ -40,7 +40,7 @@ const (
 	CancelChannel = "asynq:cancel"     // PubSub channel
 )
 
-// TaskState denotes the state of a task.
+// TaskState 任务状态
 type TaskState int
 
 const (
@@ -93,8 +93,8 @@ func TaskStateFromString(s string) (TaskState, error) {
 	return 0, errors.E(errors.FailedPrecondition, fmt.Sprintf("%q is not supported task state", s))
 }
 
-// ValidateQueueName validates a given qname to be used as a queue name.
-// Returns nil if valid, otherwise returns non-nil error.
+// ValidateQueueName 验证传入的队列名称是否有效
+// 如果非法返回nil值，如果能用返回非nil值
 func ValidateQueueName(qname string) error {
 	if len(strings.TrimSpace(qname)) == 0 {
 		return fmt.Errorf("queue name must contain one or more characters")
@@ -231,7 +231,7 @@ func AllAggregationSets(qname string) string {
 	return fmt.Sprintf("%saggregation_sets", QueueKeyPrefix(qname))
 }
 
-// TaskMessage is the internal representation of a task with additional metadata fields.
+// TaskMessage TaskMessage是带有附加元数据字段的任务的内部表示。
 // Serialized data of this type gets written to redis.
 type TaskMessage struct {
 	// Type indicates the kind of the task to be performed.
@@ -289,7 +289,7 @@ type TaskMessage struct {
 	// Retention specifies the number of seconds the task should be retained after completion.
 	Retention int64
 
-	// CompletedAt is the time the task was processed successfully in Unix time,
+	// CompletedAt 任务完成时的时间戳,
 	// the number of seconds elapsed since January 1, 1970 UTC.
 	//
 	// Use zero to indicate no value.
